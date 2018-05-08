@@ -1,10 +1,8 @@
 from flask import Flask, abort
-from flask_httpauth import HTTPBasicAuth
 from flask_restful import Api, Resource, reqparse, fields, marshal
 
 app = Flask(__name__, static_url_path="")
 api = Api(app)
-auth = HTTPBasicAuth()
 
 goods = [
     {
@@ -62,7 +60,7 @@ class GoodsList(Resource):
 
     def post(self):
         args = self.reqparse.parse_args()
-        good = [good for good in goods if good['Id'] == args['id']]
+        good = [good for good in goods if good.get('id') == args['id']]
         if len(good) == 0:
             abort(404)
         good = good[0]
@@ -86,13 +84,13 @@ class Good(Resource):
         super(Good, self).__init__()  # super().__init__() / Good.__init__(self)
 
     def get(self, id):
-        good = [good for good in goods if good['Id'] == id]
+        good = [good for good in goods if good.get('id') == id]
         if len(good) == 0:
             abort(404)
         return {'Good': marshal(good[0], goods_fields)}
 
     def delete(self, id):
-        good = [good for good in goods if good['Id'] == id]
+        good = [good for good in goods if good.get('id') == id]
         if len(good) == 0:
             abort(404)
         goods.remove(good[0])
