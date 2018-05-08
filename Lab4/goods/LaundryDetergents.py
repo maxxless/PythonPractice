@@ -7,7 +7,8 @@ class LaundryDetergents(Good):
     goods_type = GoodsType.LAUNDRY_DETERGENTS
     goods_colour = GoodsColour.BLACK
 
-    def __init__(self, name, price, amount, smell, volume):
+    def __init__(self, name, price, amount, smell, volume, id, manufacturer, goods_colour, goods_type):
+        super().__init__(id, name, manufacturer, price, amount, goods_colour, goods_type)
         self.name = name
         self.price = price
         self.amount = amount
