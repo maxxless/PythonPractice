@@ -18,17 +18,17 @@ goods_fields = {
 }
 
 
-class GoodsList(Resource):
+class Goods(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
-        self.reqparse.add_argument('id', type=int, required=True, help='No Id provided', location='json')
-        self.reqparse.add_argument('name', type=str, default="", location='json')
-        self.reqparse.add_argument('manufacturer', type=str, default="", location='json')
-        self.reqparse.add_argument('price', type=float, default=0.0, location='json')
-        self.reqparse.add_argument('amount', type=int, default=0, location='json')
-        self.reqparse.add_argument('goods_colour', type=str, default="", location='json')
-        self.reqparse.add_argument('goods_type', type=str, default="", location='json')
-        super(GoodsList, self).__init__()
+        self.reqparse.add_argument('id', type=int, location='json')
+        self.reqparse.add_argument('name', type=str, location='json')
+        self.reqparse.add_argument('manufacturer', type=str, location='json')
+        self.reqparse.add_argument('price', type=float, location='json')
+        self.reqparse.add_argument('amount', type=int, location='json')
+        self.reqparse.add_argument('goods_colour', type=str, location='json')
+        self.reqparse.add_argument('goods_type', type=str, location='json')
+        super(Goods, self).__init__()  # super().__init__() / Good.__init__(self)
 
     @app.route('/goods')
     def put(self):
@@ -64,27 +64,14 @@ class GoodsList(Resource):
         goods.update(new_good)
         return marshal(new_good, goods_fields)
 
-
-class Good(Resource):
-    def __init__(self):
-        self.reqparse = reqparse.RequestParser()
-        self.reqparse.add_argument('id', type=int, location='json')
-        self.reqparse.add_argument('name', type=str, location='json')
-        self.reqparse.add_argument('manufacturer', type=str, location='json')
-        self.reqparse.add_argument('price', type=float, location='json')
-        self.reqparse.add_argument('amount', type=int, location='json')
-        self.reqparse.add_argument('goods_colour', type=str, location='json')
-        self.reqparse.add_argument('goods_type', type=str, location='json')
-        super(Good, self).__init__()  # super().__init__() / Good.__init__(self)
-
-    @app.route('/good/<int:id>')
+    @app.route('/goods/<int:id>')
     def get(self, id):
         good = [good for good in goods if goods.get('id') == id]
         if len(good) == 0:
             abort(404)
         return marshal(good[0], goods_fields)
 
-    @app.route('/good/<int:id>')
+    @app.route('/goods/<int:id>')
     def delete(self, id):
         good = [good for good in goods if goods.get('id') == id]
         if len(good) == 0:
@@ -93,8 +80,8 @@ class Good(Resource):
         return {'result': True}
 
 
-api.add_resource(GoodsList, '/goods', endpoint='goods')
-api.add_resource(Good, '/goods/<int:id>', endpoint='good')
+api.add_resource(Goods, '/goods', endpoint='goods')
+api.add_resource(Goods, '/goods/<int:id>', endpoint='good')
 
 if __name__ == '__main__':
     app.run(debug=True)
